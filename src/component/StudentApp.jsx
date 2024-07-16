@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useStudentState, useStudentDispatch } from './StudentContext';
-import '../App.css';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './StudentApp.css';
 
 const StudentApp = () => {
   const { students } = useStudentState();
@@ -13,36 +14,40 @@ const StudentApp = () => {
   const [editLastName, setEditLastName] = useState('');
   const [editGroup, setEditGroup] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleEdit = (id, firstName, lastName, group) => {
     setEditId(id);
     setEditFirstName(firstName);
     setEditLastName(lastName);
     setEditGroup(group);
+    setIsEditing(true);
+    setShowModal(true);
+  };
+
+  const handleAdd = () => {
+    setEditId(null);
+    setEditFirstName('');
+    setEditLastName('');
+    setEditGroup('');
+    setIsEditing(false);
     setShowModal(true);
   };
 
   const handleSave = () => {
-    // Example: You can perform an API call here to update the student data
-    // For demonstration purposes, we'll just log the updated data
-    console.log(`Updated data for student ${editId}: First Name - ${editFirstName}, Last Name - ${editLastName}, Group - ${editGroup}`);
+    const updatedStudent = {
+      id: isEditing ? editId : Date.now(), // Use current timestamp as ID for new students
+      firstname: editFirstName,
+      lastname: editLastName,
+      group: editGroup,
+    };
 
-    // Update the student in the context or dispatch an action to update elsewhere
-    const updatedStudents = students.map(student => {
-      if (student.id === editId) {
-        return {
-          ...student,
-          name: `${editFirstName} ${editLastName}`,
-          username: editGroup
-        };
-      }
-      return student;
-    });
+    if (isEditing) {
+      dispatch({ type: 'UPDATE_STUDENT', payload: updatedStudent });
+    } else {
+      dispatch({ type: 'ADD_STUDENT', payload: updatedStudent });
+    }
 
-    // Dispatch an action to update students in the context
-    dispatch({ type: 'UPDATE_STUDENTS', payload: updatedStudents });
-
-    // Clear edit state and close modal
     setEditId(null);
     setEditFirstName('');
     setEditLastName('');
@@ -51,7 +56,6 @@ const StudentApp = () => {
   };
 
   const handleCancel = () => {
-    // Clear edit state and close modal
     setEditId(null);
     setEditFirstName('');
     setEditLastName('');
@@ -64,9 +68,10 @@ const StudentApp = () => {
   };
 
   return (
-    <div>
-      <h1>Student List</h1>
-      <table>
+    <div className="App">
+      <h1 className="text-center">Student List</h1>
+      <Button variant="success" onClick={handleAdd} style={{ marginBottom: '20px' }}>Add Student</Button>
+      <table className="tabless table table-striped table-bordered table-hover table-responsive-sm" >
         <thead>
           <tr>
             <th>ID</th>
@@ -77,51 +82,30 @@ const StudentApp = () => {
           </tr>
         </thead>
         <tbody>
-          {students.map(student => (
-            <tr key={student.id}>
-              <td>{student.id}</td>
-              <td>{student.id === editId ? (
-                <Form.Control
-                  type="text"
-                  value={editFirstName}
-                  onChange={(e) => setEditFirstName(e.target.value)}
-                />
-              ) : student.name.split(' ')[0]}</td>
-              <td>{student.id === editId ? (
-                <Form.Control
-                  type="text"
-                  value={editLastName}
-                  onChange={(e) => setEditLastName(e.target.value)}
-                />
-              ) : student.name.split(' ')[1]}</td>
-              <td>{student.id === editId ? (
-                <Form.Control
-                  type="text"
-                  value={editGroup}
-                  onChange={(e) => setEditGroup(e.target.value)}
-                />
-              ) : student.username}</td>
-              <td>
-                {student.id === editId ? (
-                  <React.Fragment>
-                    <Button variant="success" onClick={handleSave}>Save</Button>
-                    <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    <Button variant="primary" onClick={() => handleEdit(student.id, student.name.split(' ')[0], student.name.split(' ')[1], student.username)}>Edit</Button>
-                    <Button variant="danger" onClick={() => handleDelete(student.id)}>Delete</Button>
-                  </React.Fragment>
-                )}
-              </td>
+          {Array.isArray(students) && students.length > 0 ? (
+            students.map(student => (
+              <tr key={student.id}>
+                <td>{student.id}</td>
+                <td>{student.firstname}</td>
+                <td>{student.lastname}</td>
+                <td>{student.group}</td>
+                <td className='buttonss'>
+                  <Button variant="primary" onClick={() => handleEdit(student.id, student.firstname, student.lastname, student.group)}>✍️</Button>
+                  <Button variant="danger" onClick={() => handleDelete(student.id)}>🗑️</Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5">No students available</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={showModal} onHide={handleCancel}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Student</Modal.Title>
+          <Modal.Title>{isEditing ? 'Edit Student' : 'Add Student'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group controlId="formFirstName">
@@ -151,15 +135,15 @@ const StudentApp = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCancel}>
-            Cancel
+            ⛔
           </Button>
           <Button variant="primary" onClick={handleSave}>
-            Save
+            ✅
           </Button>
         </Modal.Footer>
       </Modal>
     </div>
   );
-}
+};
 
 export default StudentApp;

@@ -17,6 +17,18 @@ const studentReducer = (state, action) => {
         ...state,
         students: state.students.filter(student => student.id !== action.payload)
       };
+    case 'UPDATE_STUDENT':
+      return {
+        ...state,
+        students: state.students.map(student =>
+          student.id === action.payload.id ? action.payload : student
+        )
+      };
+    case 'ADD_STUDENT':
+      return {
+        ...state,
+        students: [action.payload, ...state.students]
+      };
     default:
       return state;
   }
@@ -26,13 +38,19 @@ export const StudentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(studentReducer, initialState);
 
   useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/users')
-      .then(response => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/student');
+        console.log('Fetched data:', response.data);
         dispatch({ type: 'SET_STUDENTS', payload: response.data });
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching data:', error);
-      });
+        console.log('Axios config:', error.config);
+        console.log('Axios request:', error.request);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (

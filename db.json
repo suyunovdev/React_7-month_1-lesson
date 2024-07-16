@@ -1,63 +1,63 @@
 {
-  "users": [
+  "student": [
     {
       "id": 1,
-      "firstName": "Ali",
-      "lastName": "Abdullaev",
+      "firstname": "Ali",
+      "lastname": "Abdullaev",
       "group": "A"
     },
     {
       "id": 2,
-      "firstName": "Bekzod",
-      "lastName": "Baxromov",
+      "firstname": "Bekzod",
+      "lastname": "Baxromov",
       "group": "B"
     },
     {
       "id": 3,
-      "firstName": "Dilorom",
-      "lastName": "Choriev",
+      "firstname": "Dilorom",
+      "lastname": "Choriev",
       "group": "C"
     },
     {
       "id": 4,
-      "firstName": "Elbek",
-      "lastName": "Davlatov",
+      "firstname": "Elbek",
+      "lastname": "Davlatov",
       "group": "D"
     },
     {
       "id": 5,
-      "firstName": "Farrux",
-      "lastName": "Eshonov",
+      "firstname": "Farrux",
+      "lastname": "Eshonov",
       "group": "E"
     },
     {
       "id": 6,
-      "firstName": "Gulnora",
-      "lastName": "Fozilov",
+      "firstname": "Gulnora",
+      "lastname": "Fozilov",
       "group": "A"
     },
     {
       "id": 7,
-      "firstName": "Hasan",
-      "lastName": "Ganiev",
+      "firstname": "Hasan",
+      "lastname": "Ganiev",
       "group": "B"
     },
     {
       "id": 8,
-      "firstName": "Ibrohim",
-      "lastName": "Hasanov",
+      "firstname": "Ibrohim",
+      "lastname": "Hasanov",
       "group": "C"
     },
     {
       "id": 9,
-      "firstName": "Jamila",
-      "lastName": "Ibrohimov",
+      "firstname": "Jamila",
+      "lastname": "Ibrohimov",
       "group": "D"
     },
     {
       "id": 10,
-      "firstName": "Komila",
-      "lastName": "Jalilova",
+      "firstname": "Komila",
+      "lastname": "Jalilova",
       "group": "E"
     }
   ]
